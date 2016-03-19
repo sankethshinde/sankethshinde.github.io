@@ -1,0 +1,26 @@
+p {
+    font-family: "Times New Roman", Times, serif;
+}
+
+blockquote {
+	font-family: 'Brush Script MT', cursive;
+	font-size: 21px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 400;
+	line-height: 30px;
+}
+
+.logo
+{
+	margin: 0 auto;
+}
+
+.jumbotron
+{
+	/*background-image: url("bg12.jpg");*/
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	/*background-color: white;*/
+	/*color: white;*/
+}
