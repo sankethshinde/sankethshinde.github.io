@@ -90,14 +90,118 @@
                 <hr>
 
                 <!-- Post Content -->
-                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, vero, obcaecati, aut, error quam sapiente nemo saepe quibusdam sit excepturi nam quia corporis eligendi eos magni recusandae laborum minus inventore?</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
+                <p class="lead">It refers to one or more independent asynchronous tasks running concurrently i.e. in parallel.
 
+You can create as many tasks as you want. All these tasks will be queued to the ThreadPool and managed by the framework. ThreadPool automatically adjust and maintain the number of threads maximizing throughput. It allocates the CPU cores to the tasks balancing load. It assures that all the CPU cores are utilized as much as possible. It keeps you distant from the complexities involved in creating, maintaining and disposing the threads.
+
+Task Parallelism provides you the features to support waiting, cancellation, continuation, exception handling, detailed status and many more.
+
+You can achieve task parallelism in your application either Implicitly or Explicitly.
+
+Note : You can use delegate, anonymous method or lambda expression instead of Action/Func. In this article, I will be using any of them. I may also provide partial code, if possible, to avoid unnecessary code.
                 <hr>
 
+                    Create and run tasks implicitly
+                    Tasks are created and maintained implicitly by the framework.
+                    You should use this technique when you need to process some tasks which do not return any value and do not need more control over tasks.
+                    Parallel.Invoke() – Executes each of the provided tasks/actions, possibly in parallel.
+
+                <br />
+                    static void Main()
+                    {
+                    // Retrieve Darwin's "Origin of the Species" from Gutenberg.org.
+                    string[] words = CreateWordArray(@"http://www.gutenberg.org/files/2009/2009.txt");
+                    #region ParallelTasks
+                    // Perform three tasks in parallel on the source array
+                    Parallel.Invoke(() =>
+                    {
+                    Console.WriteLine("Begin first task...");
+                    GetLongestWord(words);
+                    }, // close first Action
+                    () =>
+                    {
+                    Console.WriteLine("Begin second task...");
+                    GetMostCommonWords(words);
+                    }, //close second Action
+                    () =>
+                    {
+                    Console.WriteLine("Begin third task...");
+                    GetCountForWord(words, "species");
+                    } //close third Action
+                    ); //close parallel.invoke
+                    Console.WriteLine("Returned from Parallel.Invoke");
+                    #endregion
+                    Console.WriteLine("Press any key to exit");
+                    Console.ReadKey();
+                    }
+
+                <br />
+
+
+                    static void Main()
+                    {
+                    // Retrieve Darwin's "Origin of the Species" from Gutenberg.org.
+                    string[] words = CreateWordArray(@"http://www.gutenberg.org/files/2009/2009.txt");
+                    #region ParallelTasks
+                    // Perform three tasks in parallel on the source array
+                    Parallel.Invoke(() =>
+                    {
+                    Console.WriteLine("Begin first task...");
+                    GetLongestWord(words);
+                    }, // close first Action
+                    () =>
+                    {
+                    Console.WriteLine("Begin second task...");
+                    GetMostCommonWords(words);
+                    }, //close second Action
+                    () =>
+                    {
+                    Console.WriteLine("Begin third task...");
+                    GetCountForWord(words, "species");
+                    } //close third Action
+                    ); //close parallel.invoke
+                    Console.WriteLine("Returned from Parallel.Invoke");
+                    #endregion
+                    Console.WriteLine("Press any key to exit");
+                    Console.ReadKey();
+                    }
+
+                <br />
+
+                    static void Main(string[] args)
+                    {
+                    try
+                    {
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    CancellationToken ct = cts.Token;
+                    ParallelOptions po = new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = System.Environment.ProcessorCount };
+
+                    Parallel.Invoke(po,
+                    new Action(() => DoWork(1, ct)),
+                    new Action(() => DoWork(2, ct)),
+                    new Action(() => DoWork(3, ct)),
+                    new Action(() => DoWork(4, ct)),
+                    new Action(() => DoWork(5, ct)),
+                    new Action(() => DoWork(6, ct)),
+                    new Action(() => { cts.Cancel(); }),
+                    new Action(() => DoWork(7, ct)),
+                    new Action(() => DoWork(8, ct))
+                    );
+                    }
+                    catch (OperationCanceledException e)
+                    {
+                    Console.WriteLine(e.Message);
+                    }
+                    Console.ReadKey();
+                    }
+
+                <br />
+                    For both of the above methods, you find the words “possibly in parallel”. It means that the framework will check if the tasks can be executed using multiple threads. However if it is not able to get multiple threads, the tasks may be executed using single thread as well.
+
+                <br />
+                <br />
+
+                    I hope it helps you understand the basic concepts of Task Parallelism. Please comment your query or suggestion which will help improve the article.
                 <!-- Blog Comments -->
                 <!-- Comments Form -->
                 <div class="well">
@@ -120,40 +224,14 @@
                     </a>
                     <div class="media-body">
                         <h4 class="media-heading">
-                            Start Bootstrap
-                            <small>August 25, 2014 at 9:30 PM</small>
+                            Sanket
+                            <small>August 25, 2016 at 9:30 PM</small>
                         </h4>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                        Very good article
                     </div>
                 </div>
 
-                <!-- Comment -->
-                <div class="media">
-                    <a class="pull-left" href="#">
-                        <img class="media-object" src="http://placehold.it/64x64" alt="">
-                    </a>
-                    <div class="media-body">
-                        <h4 class="media-heading">
-                            Start Bootstrap
-                            <small>August 25, 2014 at 9:30 PM</small>
-                        </h4>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                        <!-- Nested Comment -->
-                        <div class="media">
-                            <a class="pull-left" href="#">
-                                <img class="media-object" src="http://placehold.it/64x64" alt="">
-                            </a>
-                            <div class="media-body">
-                                <h4 class="media-heading">
-                                    Nested Start Bootstrap
-                                    <small>August 25, 2014 at 9:30 PM</small>
-                                </h4>
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                            </div>
-                        </div>
-                        <!-- End Nested Comment -->
-                    </div>
-                </div>
+
 
             </div>
 
@@ -216,8 +294,8 @@
 
                 <!-- Side Widget Well -->
                 <div class="well">
-                    <h4>Side Widget Well</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
+                    <h4>Sanket Shinde</h4>
+                    <p> I am Software Developer at Tavisca. I develop applications based on Travel Technology.</p>
                 </div>
 
             </div>
@@ -231,7 +309,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2014</p>
+                    <p>Copyright &copy; Sanket Shinde 2014</p>
                 </div>
             </div>
             <!-- /.row -->
