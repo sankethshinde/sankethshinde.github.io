@@ -107,95 +107,105 @@ Note : You can use delegate, anonymous method or lambda expression instead of Ac
                     Parallel.Invoke() – Executes each of the provided tasks/actions, possibly in parallel.
 
                 <br />
-                    static void Main()
-                    {
-                    // Retrieve Darwin's "Origin of the Species" from Gutenberg.org.
-                    string[] words = CreateWordArray(@"http://www.gutenberg.org/files/2009/2009.txt");
-                    #region ParallelTasks
-                    // Perform three tasks in parallel on the source array
-                    Parallel.Invoke(() =>
-                    {
-                    Console.WriteLine("Begin first task...");
-                    GetLongestWord(words);
-                    }, // close first Action
-                    () =>
-                    {
-                    Console.WriteLine("Begin second task...");
-                    GetMostCommonWords(words);
-                    }, //close second Action
-                    () =>
-                    {
-                    Console.WriteLine("Begin third task...");
-                    GetCountForWord(words, "species");
-                    } //close third Action
-                    ); //close parallel.invoke
-                    Console.WriteLine("Returned from Parallel.Invoke");
-                    #endregion
-                    Console.WriteLine("Press any key to exit");
-                    Console.ReadKey();
-                    }
+                <br />
 
+                    <section>
+                        static void Main()
+                        {
+                        // Retrieve Darwin's "Origin of the Species" from Gutenberg.org.
+                        string[] words = CreateWordArray(@"http://www.gutenberg.org/files/2009/2009.txt");
+                        #region ParallelTasks
+                        // Perform three tasks in parallel on the source array
+                        Parallel.Invoke(() =>
+                        {
+                        Console.WriteLine("Begin first task...");
+                        GetLongestWord(words);
+                        }, // close first Action
+                        () =>
+                        {
+                        Console.WriteLine("Begin second task...");
+                        GetMostCommonWords(words);
+                        }, //close second Action
+                        () =>
+                        {
+                        Console.WriteLine("Begin third task...");
+                        GetCountForWord(words, "species");
+                        } //close third Action
+                        ); //close parallel.invoke
+                        Console.WriteLine("Returned from Parallel.Invoke");
+                        #endregion
+                        Console.WriteLine("Press any key to exit");
+                        Console.ReadKey();
+                        }
+                    </section>
+                <br />
                 <br />
 
 
-                    static void Main()
-                    {
-                    // Retrieve Darwin's "Origin of the Species" from Gutenberg.org.
-                    string[] words = CreateWordArray(@"http://www.gutenberg.org/files/2009/2009.txt");
-                    #region ParallelTasks
-                    // Perform three tasks in parallel on the source array
-                    Parallel.Invoke(() =>
-                    {
-                    Console.WriteLine("Begin first task...");
-                    GetLongestWord(words);
-                    }, // close first Action
-                    () =>
-                    {
-                    Console.WriteLine("Begin second task...");
-                    GetMostCommonWords(words);
-                    }, //close second Action
-                    () =>
-                    {
-                    Console.WriteLine("Begin third task...");
-                    GetCountForWord(words, "species");
-                    } //close third Action
-                    ); //close parallel.invoke
-                    Console.WriteLine("Returned from Parallel.Invoke");
-                    #endregion
-                    Console.WriteLine("Press any key to exit");
-                    Console.ReadKey();
-                    }
-
+                    <section>
+                        static void Main()
+                        {
+                        // Retrieve Darwin's "Origin of the Species" from Gutenberg.org.
+                        string[] words = CreateWordArray(@"http://www.gutenberg.org/files/2009/2009.txt");
+                        #region ParallelTasks
+                        // Perform three tasks in parallel on the source array
+                        Parallel.Invoke(() =>
+                        {
+                        Console.WriteLine("Begin first task...");
+                        GetLongestWord(words);
+                        }, // close first Action
+                        () =>
+                        {
+                        Console.WriteLine("Begin second task...");
+                        GetMostCommonWords(words);
+                        }, //close second Action
+                        () =>
+                        {
+                        Console.WriteLine("Begin third task...");
+                        GetCountForWord(words, "species");
+                        } //close third Action
+                        ); //close parallel.invoke
+                        Console.WriteLine("Returned from Parallel.Invoke");
+                        #endregion
+                        Console.WriteLine("Press any key to exit");
+                        Console.ReadKey();
+                        }
+                    </section>
                 <br />
 
-                    static void Main(string[] args)
-                    {
-                    try
-                    {
-                    CancellationTokenSource cts = new CancellationTokenSource();
-                    CancellationToken ct = cts.Token;
-                    ParallelOptions po = new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = System.Environment.ProcessorCount };
+                <br/>
+                    <section>
+                        static void Main(string[] args)
+                        {
+                        try
+                        {
+                        CancellationTokenSource cts = new CancellationTokenSource();
+                        CancellationToken ct = cts.Token;
+                        ParallelOptions po = new ParallelOptions { CancellationToken = ct, MaxDegreeOfParallelism = System.Environment.ProcessorCount };
 
-                    Parallel.Invoke(po,
-                    new Action(() => DoWork(1, ct)),
-                    new Action(() => DoWork(2, ct)),
-                    new Action(() => DoWork(3, ct)),
-                    new Action(() => DoWork(4, ct)),
-                    new Action(() => DoWork(5, ct)),
-                    new Action(() => DoWork(6, ct)),
-                    new Action(() => { cts.Cancel(); }),
-                    new Action(() => DoWork(7, ct)),
-                    new Action(() => DoWork(8, ct))
-                    );
-                    }
-                    catch (OperationCanceledException e)
-                    {
-                    Console.WriteLine(e.Message);
-                    }
-                    Console.ReadKey();
-                    }
+                        Parallel.Invoke(po,
+                        new Action(() => DoWork(1, ct)),
+                        new Action(() => DoWork(2, ct)),
+                        new Action(() => DoWork(3, ct)),
+                        new Action(() => DoWork(4, ct)),
+                        new Action(() => DoWork(5, ct)),
+                        new Action(() => DoWork(6, ct)),
+                        new Action(() => { cts.Cancel(); }),
+                        new Action(() => DoWork(7, ct)),
+                        new Action(() => DoWork(8, ct))
+                        );
+                        }
+                        catch (OperationCanceledException e)
+                        {
+                        Console.WriteLine(e.Message);
+                        }
+                        Console.ReadKey();
+                        }
+                    </section>
 
+                        <br />
                 <br />
+
                     For both of the above methods, you find the words “possibly in parallel”. It means that the framework will check if the tasks can be executed using multiple threads. However if it is not able to get multiple threads, the tasks may be executed using single thread as well.
 
                 <br />
